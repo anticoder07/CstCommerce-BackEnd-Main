@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +31,21 @@ public class OwnerServiceImpl implements OwnerService {
 
   private final DirectCardConnectProductRepository directCardConnectProductRepository;
 
-  private final UserRepository userRepository;
-
   private final VoteRepository voteRepository;
 
   private final CommercePriceRepository commercePriceRepository;
+
+  @Override
+  public ShopDto makeTheShop(Users users, String shopName) {
+    Shop shop = new Shop();
+    shop.setShopType(ShopType.WORK);
+    shop.setShopName(shopName);
+    shop.setRegistrationDate(Instant.now());
+    shop.setUsers(users);
+    shopRepository.save(shop);
+    ShopDto shopDto = new ShopDto(shop.getId(), shopName, null);
+    return shopDto;
+  }
 
   @Override
   public ShopDto seeAllShop(Users user) {
