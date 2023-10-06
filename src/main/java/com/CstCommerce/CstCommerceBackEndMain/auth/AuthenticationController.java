@@ -1,11 +1,11 @@
 package com.CstCommerce.CstCommerceBackEndMain.auth;
 
+import com.CstCommerce.CstCommerceBackEndMain.exception.EmailIsExist;
 import com.CstCommerce.CstCommerceBackEndMain.payload.request.LogInRequest;
 import com.CstCommerce.CstCommerceBackEndMain.payload.request.SignUpRequest;
 import com.CstCommerce.CstCommerceBackEndMain.payload.response.AuthenticationResponse;
 import com.CstCommerce.CstCommerceBackEndMain.payload.response.ResponseHandler;
 import com.CstCommerce.CstCommerceBackEndMain.securityConfig.LogOutService;
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -36,7 +36,10 @@ public class AuthenticationController {
   @PostMapping("/sign-up")
   public ResponseEntity<Object> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
     try {
-      return ResponseHandler.generateResponse(ResponseHandler.MESSAGE_SUCCESS, HttpStatus.OK, authenticationService.signUp(signUpRequest));
+      AuthenticationResponse check = authenticationService.signUp(signUpRequest);
+      if (check == null)
+        return ResponseHandler.generateErrorResponse(new EmailIsExist("Email is exist!"));
+      return ResponseHandler.generateResponse(ResponseHandler.MESSAGE_SUCCESS, HttpStatus.OK, check);
     } catch (Exception e) {
       return ResponseHandler.generateErrorResponse(e);
     }

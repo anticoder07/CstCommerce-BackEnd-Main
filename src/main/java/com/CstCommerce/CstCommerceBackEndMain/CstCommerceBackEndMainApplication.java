@@ -16,11 +16,13 @@ import java.time.Instant;
 @SpringBootApplication
 @RequiredArgsConstructor
 @EnableTransactionManagement
-public class CstCommerceBackEndMainApplication implements CommandLineRunner {
+public class CstCommerceBackEndMainApplication /* implements CommandLineRunner */ {
 
   public static void main(String[] args) {
     SpringApplication.run(CstCommerceBackEndMainApplication.class, args);
   }
+
+	/*
 
 	private final ShopConnectProductRepository shopConnectProductRepository;
 
@@ -130,4 +132,6 @@ public class CstCommerceBackEndMainApplication implements CommandLineRunner {
 		billRepository.save(bill);
 
 	}
+
+	 */
 }

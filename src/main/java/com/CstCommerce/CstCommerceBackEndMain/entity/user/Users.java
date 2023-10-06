@@ -48,12 +48,6 @@ public class Users {
     this.sdt = sdt;
     if (role.equals("admin")) {
       this.role = Role.ADMIN;
-//    } else if (role.equals("Admin delete")) {
-//      this.role = Role.ADMIN;
-//    } else if (role.equals("Admin update")) {
-//      this.role = Role.ADMIN;
-//    } else if (role.equals("Admin read")) {
-//      this.role = Role.ADMIN;
     } else if (role.equals("Owner")) {
       this.role = Role.OWNER;
     } else {

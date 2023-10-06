@@ -2,6 +2,8 @@ package com.CstCommerce.CstCommerceBackEndMain.auth;
 
 import com.CstCommerce.CstCommerceBackEndMain.entity.token.RoleType;
 import com.CstCommerce.CstCommerceBackEndMain.entity.token.Token;
+import com.CstCommerce.CstCommerceBackEndMain.entity.user.Basket;
+import com.CstCommerce.CstCommerceBackEndMain.entity.user.Bill;
 import com.CstCommerce.CstCommerceBackEndMain.entity.user.Users;
 import com.CstCommerce.CstCommerceBackEndMain.payload.request.LogInRequest;
 import com.CstCommerce.CstCommerceBackEndMain.payload.request.SignUpRequest;
@@ -81,6 +83,8 @@ public class AuthenticationService {
   }
 
   public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
+    if (userRepository.existsByEmail(signUpRequest.getEmail()))
+      return null;
     Users users = new Users(
             signUpRequest.getUsername(),
             signUpRequest.getEmail(),
@@ -88,6 +92,8 @@ public class AuthenticationService {
             signUpRequest.getSdt(),
             signUpRequest.getRole());
     UserDetailsImpl userDetails = new UserDetailsImpl(users);
+    Basket basket = new Basket();
+    basket.setUsers(users);
     userRepository.save(users);
     var jwtToken = jwtUtils.generateToken(userDetails);
     var refreshToken = jwtUtils.generateRefreshToken(userDetails);

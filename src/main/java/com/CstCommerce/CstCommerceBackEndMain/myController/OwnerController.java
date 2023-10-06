@@ -35,6 +35,11 @@ public class OwnerController {
     return user;
   }
 
+  @PostMapping("/make-new-shop")
+  public ResponseEntity<?> makeNewShop(@RequestBody String shopName){
+    return ResponseEntity.ok(ownerService.makeTheShop(getUser(), shopName));
+  }
+
   @GetMapping("/see-shop")
   public ResponseEntity<?> seeAllShop() {
     return ResponseEntity.ok(ownerService.seeAllShop(getUser()));
