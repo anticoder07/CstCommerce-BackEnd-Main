@@ -2,6 +2,7 @@ package com.CstCommerce.CstCommerceBackEndMain.myController;
 
 import com.CstCommerce.CstCommerceBackEndMain.dto.*;
 import com.CstCommerce.CstCommerceBackEndMain.entity.user.Users;
+import com.CstCommerce.CstCommerceBackEndMain.payload.response.ResponseHandler;
 import com.CstCommerce.CstCommerceBackEndMain.repository.UserRepository;
 import com.CstCommerce.CstCommerceBackEndMain.securityConfig.AuthenticationJwtFilter;
 import com.CstCommerce.CstCommerceBackEndMain.service.User.UserService;
@@ -44,8 +45,8 @@ public class UserController {
   }
 
   @GetMapping("/see-basket")
-  public ResponseEntity<?> seeBasket() {
-    return ResponseEntity.ok(userService.seeTheBasket(getUser()));
+  public BasketDto seeBasket() {
+    return userService.seeTheBasket(getUser());
   }
 
   @PostMapping("/buy-basket")
@@ -60,8 +61,8 @@ public class UserController {
   }
 
   @GetMapping("/see-bill")
-  public ResponseEntity<?> seeBill() {
-    return ResponseEntity.ok(userService.seeAllBill(getUser()));
+  public List<BillDto> seeBill() {
+    return userService.seeAllBill(getUser());
   }
 
   @PostMapping("/vote-product")
@@ -71,6 +72,10 @@ public class UserController {
 
   @GetMapping("/del-account")
   public ResponseEntity<?> delAccount() {
-    return ResponseEntity.ok(userService.deleteUserAccount(getUser()));
+    try {
+      return ResponseEntity.ok(userService.deleteUserAccount(getUser()));
+    } catch (Exception e) {
+      return ResponseHandler.generateErrorResponse(e);
+    }
   }
 }

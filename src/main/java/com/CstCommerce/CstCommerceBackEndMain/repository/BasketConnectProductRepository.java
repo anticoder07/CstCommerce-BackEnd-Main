@@ -16,7 +16,7 @@ import java.util.List;
 public interface BasketConnectProductRepository extends JpaRepository<BasketConnectProduct, Long> {
 
   @Modifying
-  @Query("DELETE FROM BasketConnectProduct bcp WHERE bcp.basket = :basket")
+  @Query("delete from BasketConnectProduct bcp where bcp.basket = :basket")
   void deleteByBasket(@Param("basket") Basket basket);
 
   List<BasketConnectProduct> findByBasket(Basket basket);

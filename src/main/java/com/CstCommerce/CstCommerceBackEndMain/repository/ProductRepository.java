@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   Product findByProductName(String productName);
 
   @Query("""
-                select p from Product p where p.productType = :pt
+          select p from Product p where p.productType = :pt
           """)
   List<Product> findByProductType(@Param("pt") ProductType p);
 

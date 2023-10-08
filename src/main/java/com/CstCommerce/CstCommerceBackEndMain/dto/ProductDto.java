@@ -2,6 +2,7 @@ package com.CstCommerce.CstCommerceBackEndMain.dto;
 
 import com.CstCommerce.CstCommerceBackEndMain.entity.ShopAndProduct.Product;
 import com.CstCommerce.CstCommerceBackEndMain.entity.ShopAndProduct.ProductType;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,12 +15,13 @@ public class ProductDto {
 
   private Long id;
 
-  @NotBlank
+  @NotBlank(message = "Product name not null")
   private String productName;
 
+  @Min(value = 1, message = "Number of product min as one")
   private Long numberOfProducts;
 
-  @NotBlank
+  @NotBlank(message = "Description not null")
   private String descriptionProduct;
 
   private float price;

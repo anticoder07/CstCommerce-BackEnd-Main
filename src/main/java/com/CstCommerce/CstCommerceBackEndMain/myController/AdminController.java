@@ -1,11 +1,15 @@
 package com.CstCommerce.CstCommerceBackEndMain.myController;
 
-import com.CstCommerce.CstCommerceBackEndMain.dto.EmailDto;
+import com.CstCommerce.CstCommerceBackEndMain.dto.ProductDto;
+import com.CstCommerce.CstCommerceBackEndMain.dto.ShopDto;
+import com.CstCommerce.CstCommerceBackEndMain.dto.UserDto;
 import com.CstCommerce.CstCommerceBackEndMain.service.User.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,23 +19,25 @@ public class AdminController {
   private final AdminService adminService;
 
   @GetMapping("/see-all-product")
-  public ResponseEntity<?> seeAllProducts() {
-    return ResponseEntity.ok(adminService.seeAllProduct());
+  public List<ProductDto> seeAllProducts() {
+    return adminService.seeAllProduct();
   }
 
   @GetMapping("/see-all-shop")
-  public ResponseEntity<?> seeAllShops(){
-    return ResponseEntity.ok(adminService.seeAllShop());
+  public List<ShopDto> seeAllShops() {
+    return adminService.seeAllShop();
   }
 
   @GetMapping("/see-all-user")
-  public ResponseEntity<?> seeAllUsers(){
-    return ResponseEntity.ok(adminService.seeAllUser());
+  public List<UserDto> seeAllUsers() {
+    return adminService.seeAllUser();
   }
 
   @PostMapping("/delete-account")
-  public ResponseEntity<?> deleteAccount(@RequestBody EmailDto emailDto){
-    return ResponseEntity.ok(adminService.deleteAccount(emailDto.getEmail()));
+  public ResponseEntity<?> deleteAccount(@RequestBody String email) {
+    if (email == null)
+      return ResponseEntity.badRequest().body("Email cannot null");
+    return ResponseEntity.ok(adminService.deleteAccount(email));
   }
 
 }

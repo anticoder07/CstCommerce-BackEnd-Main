@@ -15,11 +15,6 @@ import java.util.List;
 
 @Repository
 public interface BillConnectProductRepository extends JpaRepository<BillConnectProduct, Long> {
-//  @Query("""
-//    select bcp.product from BillConnectProduct bcp where bcp.bill = :bill
-//""")
-//  List<Product> findByBill(@Param("bill") Bill bill);
-
   List<BillConnectProduct> findByBill(Bill bill);
 
   List<BillConnectProduct> findByBillAndProduct(Bill bill, Product product);

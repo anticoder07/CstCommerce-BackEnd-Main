@@ -27,11 +27,9 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
   void alterShopName(@Param("id") Long id, @Param("shopName") String shopName);
 
   @Modifying
-  @Query(
-          """
-                      update Shop s set s.shopType = :type where s.id = :id
-                  """
-  )
+  @Query("""
+          update Shop s set s.shopType = :type where s.id = :id
+          """)
   Shop alterShopType(@Param("id") Long id, @Param("type") ShopType shopType);
 
   @Modifying
