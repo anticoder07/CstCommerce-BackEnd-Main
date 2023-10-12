@@ -46,7 +46,7 @@ public class Users {
     this.email = email;
     this.password = password;
     this.sdt = sdt;
-    if (role.equals("admin")) {
+    if (role.equals("Admin")) {
       this.role = Role.ADMIN;
     } else if (role.equals("Owner")) {
       this.role = Role.OWNER;

@@ -1,6 +1,5 @@
 package com.CstCommerce.CstCommerceBackEndMain.dto;
 
-import com.CstCommerce.CstCommerceBackEndMain.entity.ShopAndProduct.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

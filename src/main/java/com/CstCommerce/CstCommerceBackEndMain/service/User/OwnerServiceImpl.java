@@ -262,7 +262,9 @@ public class OwnerServiceImpl implements OwnerService {
       }
 
       List<ProductDto> productDtoList = new ArrayList<>();
+      float amount = 0F;
       for (Product p : products) {
+        amount += p.getPrice();
         boolean found = false;
         for (ProductDto pd : productDtoList) {
           if (p.getId().equals(pd.getId())) {
@@ -279,6 +281,7 @@ public class OwnerServiceImpl implements OwnerService {
       }
 
       DirectCardDto directCardDto = new DirectCardDto(dc, productDtoList);
+      directCardDto.setAmount(amount);
       directCardDtoList.add(directCardDto);
     }
     return directCardDtoList;

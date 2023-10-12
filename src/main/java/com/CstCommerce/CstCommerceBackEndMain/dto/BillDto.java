@@ -1,6 +1,5 @@
 package com.CstCommerce.CstCommerceBackEndMain.dto;
 
-import com.CstCommerce.CstCommerceBackEndMain.entity.user.Bill;
 import com.CstCommerce.CstCommerceBackEndMain.entity.user.BillStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

@@ -3,6 +3,7 @@ package com.CstCommerce.CstCommerceBackEndMain.myController;
 import com.CstCommerce.CstCommerceBackEndMain.dto.ProductDto;
 import com.CstCommerce.CstCommerceBackEndMain.service.User.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +25,20 @@ public class PublicController {
   }
 
   @PostMapping("/sort-by-price/asc")
-  public ResponseEntity<?> sortAsc(@Valid @RequestBody List<ProductDto> productDtoList) {
-    if (productDtoList == null)
-      return ResponseEntity.badRequest().body("Request not null");
+  public ResponseEntity<?> sortAsc(
+          @Valid @RequestBody
+          @NotNull(message = "List product cannot null")
+          List<ProductDto> productDtoList
+  ) {
     return ResponseEntity.ok(userService.sortProductByPrice(productDtoList, true));
   }
 
   @PostMapping("/sort-by-price/des")
-  public ResponseEntity<?> sortDes(@Valid @RequestBody List<ProductDto> productDtoList) {
-    if (productDtoList == null)
-      return ResponseEntity.badRequest().body("Request not null");
+  public ResponseEntity<?> sortDes(
+          @Valid @RequestBody
+          @NotNull(message = "List product cannot null")
+          List<ProductDto> productDtoList
+  ) {
     return ResponseEntity.ok(userService.sortProductByPrice(productDtoList, false));
   }
 }

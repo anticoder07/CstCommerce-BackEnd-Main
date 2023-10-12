@@ -3,12 +3,11 @@ package com.CstCommerce.CstCommerceBackEndMain.auth;
 import com.CstCommerce.CstCommerceBackEndMain.entity.token.RoleType;
 import com.CstCommerce.CstCommerceBackEndMain.entity.token.Token;
 import com.CstCommerce.CstCommerceBackEndMain.entity.user.Basket;
-import com.CstCommerce.CstCommerceBackEndMain.entity.user.Bill;
 import com.CstCommerce.CstCommerceBackEndMain.entity.user.Users;
 import com.CstCommerce.CstCommerceBackEndMain.payload.request.LogInRequest;
 import com.CstCommerce.CstCommerceBackEndMain.payload.request.SignUpRequest;
 import com.CstCommerce.CstCommerceBackEndMain.payload.response.AuthenticationResponse;
-import com.CstCommerce.CstCommerceBackEndMain.payload.response.MessageResponse;
+import com.CstCommerce.CstCommerceBackEndMain.repository.BasketRepository;
 import com.CstCommerce.CstCommerceBackEndMain.repository.TokenRepository;
 import com.CstCommerce.CstCommerceBackEndMain.repository.UserRepository;
 import com.CstCommerce.CstCommerceBackEndMain.securityConfig.JwtUtils;
@@ -17,8 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.parser.Authorization;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +29,8 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   private final UserRepository userRepository;
+
+  private final BasketRepository basketRepository;
 
   private final JwtUtils jwtUtils;
 
@@ -90,11 +89,13 @@ public class AuthenticationService {
             signUpRequest.getEmail(),
             passwordEncoder.encode(signUpRequest.getPassword()),
             signUpRequest.getSdt(),
-            signUpRequest.getRole());
+            signUpRequest.getRole()
+    );
     UserDetailsImpl userDetails = new UserDetailsImpl(users);
     Basket basket = new Basket();
     basket.setUsers(users);
     userRepository.save(users);
+    basketRepository.save(basket);
     var jwtToken = jwtUtils.generateToken(userDetails);
     var refreshToken = jwtUtils.generateRefreshToken(userDetails);
     saveUserToken(userDetails, jwtToken);

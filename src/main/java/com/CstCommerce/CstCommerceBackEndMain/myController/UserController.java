@@ -7,6 +7,7 @@ import com.CstCommerce.CstCommerceBackEndMain.repository.UserRepository;
 import com.CstCommerce.CstCommerceBackEndMain.securityConfig.AuthenticationJwtFilter;
 import com.CstCommerce.CstCommerceBackEndMain.service.User.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,17 +32,21 @@ public class UserController {
   }
 
   @PostMapping("/add-product-basket")
-  public ResponseEntity<?> addProductBasket(
-          @Valid @RequestBody List<ProductDto> productDtos
+  public BasketDto addProductBasket(
+          @Valid @RequestBody
+          @NotNull(message = "List product cannot null")
+          List<ProductDto> productDtoList
   ) {
-    return ResponseEntity.ok(userService.addProductIntoBasket(getUser(), productDtos));
+    return userService.addProductIntoBasket(getUser(), productDtoList);
   }
 
   @PostMapping("/del-product-basket")
-  public ResponseEntity<?> delProductBasket(
-          @Valid @RequestBody List<ProductDto> productDtos
+  public BasketDto delProductBasket(
+          @Valid @RequestBody
+          @NotNull(message = "Product cannot null")
+          List<ProductDto> productDtoList
   ) {
-    return ResponseEntity.ok(userService.deleteProductInTheBasket(getUser(), productDtos));
+    return userService.deleteProductInTheBasket(getUser(), productDtoList);
   }
 
   @GetMapping("/see-basket")
@@ -66,7 +71,11 @@ public class UserController {
   }
 
   @PostMapping("/vote-product")
-  public ResponseEntity<?> voteProduct(@RequestBody @Valid VoteInputDto voteDto) {
+  public ResponseEntity<?> voteProduct(
+          @RequestBody @Valid
+          @NotNull(message = "vote cannot null")
+          VoteInputDto voteDto
+  ) {
     return ResponseEntity.ok(userService.evaluateTheProduct(getUser(), voteDto.getVote(), voteDto.getBillId(), voteDto.getProductId()));
   }
 

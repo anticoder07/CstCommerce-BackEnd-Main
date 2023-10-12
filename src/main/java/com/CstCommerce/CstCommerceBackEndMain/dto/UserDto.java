@@ -1,18 +1,23 @@
 package com.CstCommerce.CstCommerceBackEndMain.dto;
 
 import com.CstCommerce.CstCommerceBackEndMain.entity.user.Users;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class UserDto {
+  @NotNull(message = "Id cannot null")
   private Long id;
 
+  @NotNull(message = "username cannot null")
   private String username;
 
+  @NotNull(message = "email cannot null")
   private String email;
 
+  @NotNull(message = "Id cannot null")
   private String password;
 
   private String role;

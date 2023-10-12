@@ -4,8 +4,8 @@ import com.CstCommerce.CstCommerceBackEndMain.dto.ProductDto;
 import com.CstCommerce.CstCommerceBackEndMain.dto.ShopDto;
 import com.CstCommerce.CstCommerceBackEndMain.dto.UserDto;
 import com.CstCommerce.CstCommerceBackEndMain.service.User.AdminService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,10 +34,12 @@ public class AdminController {
   }
 
   @PostMapping("/delete-account")
-  public ResponseEntity<?> deleteAccount(@RequestBody String email) {
-    if (email == null)
-      return ResponseEntity.badRequest().body("Email cannot null");
-    return ResponseEntity.ok(adminService.deleteAccount(email));
+  public String deleteAccount(
+          @RequestBody
+          @NotNull(message = "Email cannot null")
+          String email
+  ) {
+    return adminService.deleteAccount(email);
   }
 
 }

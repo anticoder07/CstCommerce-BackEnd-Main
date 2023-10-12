@@ -8,7 +8,6 @@ import com.CstCommerce.CstCommerceBackEndMain.entity.user.Users;
 import java.util.List;
 
 public interface OwnerService {
-//  Users findUserByJwt();
   ShopDto makeTheShop(Users users, String shopName);
 
   ShopDto seeAllShop(Users user);

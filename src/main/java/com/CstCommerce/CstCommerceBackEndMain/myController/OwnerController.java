@@ -7,17 +7,16 @@ import com.CstCommerce.CstCommerceBackEndMain.entity.user.Users;
 import com.CstCommerce.CstCommerceBackEndMain.payload.response.ResponseHandler;
 import com.CstCommerce.CstCommerceBackEndMain.repository.UserRepository;
 import com.CstCommerce.CstCommerceBackEndMain.securityConfig.AuthenticationJwtFilter;
-import com.CstCommerce.CstCommerceBackEndMain.securityConfig.NotificationSseEmitterManager;
 import com.CstCommerce.CstCommerceBackEndMain.service.User.OwnerService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
@@ -30,8 +29,6 @@ public class OwnerController {
 
   private final UserRepository userRepository;
 
-  private final NotificationSseEmitterManager emitterManager;
-
   private Users getUser() {
     UserDetails userDetails = AuthenticationJwtFilter.getUserDetailsCirculate();
     Users user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
@@ -39,10 +36,12 @@ public class OwnerController {
   }
 
   @PostMapping("/make-new-shop")
-  public ResponseEntity<?> makeNewShop(@RequestBody String shopName){
-    if (shopName == null)
-      return ResponseEntity.badRequest().body("Shop name cannot null");
-    return ResponseEntity.ok(ownerService.makeTheShop(getUser(), shopName));
+  public ShopDto makeNewShop(
+          @RequestBody
+          @NotNull(message = "Shop name cannot null")
+          String shopName
+  ) {
+    return ownerService.makeTheShop(getUser(), shopName);
   }
 
   @GetMapping("/see-shop")
@@ -56,37 +55,64 @@ public class OwnerController {
   }
 
   @PostMapping("/add-product-shop")
-  public ResponseEntity<?> addProductIntoTheShop(@RequestBody @Valid ProductDto productDto) {
-    return ResponseEntity.ok(ownerService.addProductIntoTheShop(getUser(), productDto));
+  public List<ProductDto> addProductIntoTheShop(
+          @RequestBody @Valid
+          @NotNull(message = "Product cannot null")
+          ProductDto productDto
+  ) {
+    return ownerService.addProductIntoTheShop(getUser(), productDto);
   }
 
   @PostMapping("/del-product-shop")
-  public ResponseEntity<?> delProductInTheShop(@RequestBody Long id) {
-    return ResponseEntity.ok(ownerService.delProductIntoTheShop(getUser(), id));
+  public List<ProductDto> delProductInTheShop(
+          @RequestBody
+          @NotNull(message = "Id cannot null")
+          @NotBlank(message = "Id cannot blank")
+          @Min(value = 1, message = "id > 1")
+          Long id
+  ) {
+    return ownerService.delProductIntoTheShop(getUser(), id);
   }
 
   @PostMapping("/alter-description-product-shop")
-  public ResponseEntity<?> alterDescriptionProductInTheShop(@RequestBody @Valid ProductDto productDto) {
-    return ResponseEntity.ok(ownerService.alterDescriptionProductIntoTheShop(getUser(), productDto.getId(), productDto.getDescriptionProduct()));
+  public ProductDto alterDescriptionProductInTheShop(
+          @RequestBody @Valid
+          @NotNull(message = "Product cannot null")
+          ProductDto productDto
+  ) {
+    return ownerService.alterDescriptionProductIntoTheShop(getUser(), productDto.getId(), productDto.getDescriptionProduct());
   }
 
   @PostMapping("/alter-price-product-shop")
-  public ResponseEntity<?> alterPriceProductInTheShop(@RequestBody @Valid ProductDto productDto) {
-    return ResponseEntity.ok(ownerService.alterPriceProductIntoTheShop(getUser(), productDto.getId(), productDto.getPrice()));
+  public ProductDto alterPriceProductInTheShop(
+          @RequestBody @Valid
+          @NotNull(message = "Product cannot null")
+          ProductDto productDto
+  ) {
+    return ownerService.alterPriceProductIntoTheShop(getUser(), productDto.getId(), productDto.getPrice());
   }
 
   @PostMapping("/restore-product")
-  public ResponseEntity<?> restoreProductInTheShop(@RequestBody @Valid Long id) {
-    return ResponseEntity.ok(ownerService.restoreProduce(getUser(), id));
+  public ProductDto restoreProductInTheShop(
+          @RequestBody
+          @NotNull(message = "Id cannot null")
+          @Min(value = 1, message = "id > 1")
+          Long id
+  ) {
+    return ownerService.restoreProduce(getUser(), id);
   }
 
   @PostMapping("/alter-shop-name")
-  public ResponseEntity<?> alterNameShop(@RequestBody @NotBlank String shopName) {
-    return ResponseEntity.ok(ownerService.alterNameShop(getUser(), shopName));
+  public ShopDto alterNameShop(
+          @RequestBody
+          @NotNull(message = "Shop name cannot null")
+          String shopName
+  ) {
+    return ownerService.alterNameShop(getUser(), shopName);
   }
 
   @GetMapping("/see-direct-card")
-  public List<DirectCardDto> seeTheDirectCard(){
+  public List<DirectCardDto> seeTheDirectCard() {
     return ownerService.seeTheDirectCard(getUser());
   }
 
@@ -99,14 +125,6 @@ public class OwnerController {
     } catch (Exception e) {
       return ResponseHandler.generateErrorResponse(e);
     }
-      return ResponseEntity.badRequest().body("Error delete shop");
-  }
-
-  @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  public SseEmitter stream() {
-    SseEmitter emitter = new SseEmitter();
-    emitter.onCompletion(() -> emitterManager.removeEmitter(emitter));
-    emitterManager.addEmitter(emitter);
-    return emitter;
+    return ResponseEntity.badRequest().body("Error delete shop");
   }
 }
